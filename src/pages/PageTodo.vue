@@ -4,10 +4,13 @@
       v-model="newTask"
       placeholder="Add task"
       @keyup.enter="addTask"
-      class="bg-cyan-8"
+      class="bg-light-blue"
       dark
       filled
       square
+      clearable
+      clear-icon="cancel"
+      ref="taskInput"
     >
       <template v-slot:append>
         <q-btn @click="addTask" icon="add" round dense flat />
@@ -15,7 +18,11 @@
     </q-input>
 
     <q-list bordered separator>
-      <q-item v-for="task in tasks" :key="task.id" class="bg-cyan-1">
+      <q-item
+        v-for="task in tasks"
+        :key="task.id"
+        class="bg-blue-grey-2 text-black"
+      >
         <q-item-section>
           <q-item-label>{{ task.title }}</q-item-label>
         </q-item-section>
@@ -30,7 +37,7 @@ export default {
   name: "PageTodo",
   data() {
     return {
-      newTaskTitle: "",
+      newTask: "",
       tasks: [],
       loadingTasks: false,
     };
@@ -43,9 +50,9 @@ export default {
       this.$q.loading.show({
         spinner: QSpinnerGears,
         spinnerColor: "red",
-        messageColor: "white",
+        messageColor: "blue",
         backgroundColor: "light-blue-11",
-        message: "Getting task... Hang on..",
+        message: "Getting tasks... Hang on..",
       });
 
       this.$axios
@@ -64,13 +71,21 @@ export default {
     },
 
     addTask() {
-      let newTask = {
+      if (this.newTask === "") {
+        this.$q.dialog({
+          title: "Error Entering Task",
+          message: "Please enter a task",
+        });
+        this.$refs.taskInput.focus();
+        return;
+      }
+      let nTask = {
         id: Date.now(),
-        title: "New Task",
+        title: this.newTask,
       };
       let formData = new FormData();
-      formData.append("id", newTask.id);
-      formData.append("title", newTask.title);
+      formData.append("id", nTask.id);
+      formData.append("title", nTask.title);
 
       this.$axios
         .post(`${process.env.API}/createTask`, formData)
@@ -87,7 +102,7 @@ export default {
             message: err.message + ",could not connect to Server.",
           });
         });
-      this.tasks.push(newTask);
+      this.tasks.push(nTask);
       this.newTask = "";
     },
   },

@@ -2,9 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-toolbar-title class="text-center">
-          PWA Todo 1
-        </q-toolbar-title>
+        <q-toolbar-title class="text-center"> TO DO </q-toolbar-title>
       </q-toolbar>
     </q-header>
 
@@ -16,12 +14,10 @@
 
 <script>
 export default {
-  name: 'MainLayout',
+  name: "MainLayout",
 
-  data () {
-    return {
-
-    }
-  }
-}
+  data() {
+    return {};
+  },
+};
 </script>
